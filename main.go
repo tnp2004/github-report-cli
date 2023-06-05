@@ -63,17 +63,15 @@ func main() {
 		panic(err)
 	}
 	for i := len(commits) - 1; i >= 0; i-- {
-		commitTime, _ := time.Parse(time.RFC3339, commits[i].CommitInfo.Committer.Date)
-		timee := commitTime.Format("Monday, 2 January, 2006 3:04:05 PM")
-		text := fmt.Sprintf("🪅%s 🕒%s \n=> %v \n\n", commits[i].CommitInfo.Committer.Name, timee, commits[i].CommitInfo.Message)
-
-		today := time.Now().Format("2006-01-02")
-
+		commitTimeUTC, _ := time.Parse(time.RFC3339, commits[i].CommitInfo.Committer.Date)
 		// chage to your time zone
 		timezone, _ := time.LoadLocation("Asia/Bangkok")
-		commitDate := commitTime.In(timezone).Format("2006-01-02")
-		fmt.Println(commitDate)
-		fmt.Println(today)
+		commitTimeInTimeZone := commitTimeUTC.In(timezone)
+		commitDate := commitTimeInTimeZone.Format("2006-01-02")
+		commitTimeFormatted := commitTimeInTimeZone.Format("Monday, 2 January, 2006 15:4:5 PM")
+		text := fmt.Sprintf("🪅%s 🕒%s \n=> %v \n\n", commits[i].CommitInfo.Committer.Name, commitTimeFormatted, commits[i].CommitInfo.Message)
+
+		today := time.Now().Format("2006-01-02")
 		if commitDate == today {
 			// Highlight today
 			color.HiCyan(text)
