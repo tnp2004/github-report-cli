@@ -29,10 +29,10 @@ func main() {
 	}
 
 	tokens := os.Getenv("GITHUB_TOKENS")
-	// Github account owner
+	// github account owner
 	owner := "tnp2004"
 	// The repository that you want to watch commits
-	repo := "poller"
+	repo := "github-report-cli"
 
 	client := http.Client{}
 	endpoint := fmt.Sprintf("https://api.github.com/repos/%s/%s/commits", owner, repo)
@@ -68,8 +68,12 @@ func main() {
 		text := fmt.Sprintf("🪅%s 🕒%s \n=> %v \n\n", commits[i].CommitInfo.Committer.Name, timee, commits[i].CommitInfo.Message)
 
 		today := time.Now().Format("2006-01-02")
-		commitDate := commitTime.Format("2006-01-02")
 
+		// chage to your time zone
+		timezone, _ := time.LoadLocation("Asia/Bangkok")
+		commitDate := commitTime.In(timezone).Format("2006-01-02")
+		fmt.Println(commitDate)
+		fmt.Println(today)
 		if commitDate == today {
 			// Highlight today
 			color.HiCyan(text)
