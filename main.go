@@ -9,6 +9,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/briandowns/spinner"
 	"github.com/fatih/color"
 	"github.com/joho/godotenv"
 )
@@ -23,18 +24,24 @@ type Commit struct {
 	} `json:"commit"`
 }
 
-func main() {
+func init() {
 	if err := godotenv.Load(); err != nil {
 		log.Fatal(".env file couldn't to be loaded")
 	}
+}
+
+func main() {
 	tokens := os.Getenv("GITHUB_TOKENS")
+	spinner := spinner.New(spinner.CharSets[11], 100*time.Millisecond)
+	spinner.Suffix = " fetching..."
+	spinner.Start()
 
 	// github account owner
-	owner := "tnp2004" // default value
+	owner := "tnp2004" // default owner
 	// The repository that you want to watch commits
-	repo := "github-report-cli" // default value
+	repo := "github-report-cli" // default repo
 
-	// can give args as => gr <owner> <repo>
+	// can give args as => go run main.go <owner> <repo>
 	argLen := len(os.Args[1:])
 	if argLen == 1 {
 		color.HiRed("owner, repo are needed!!")
@@ -50,7 +57,7 @@ func main() {
 	var commits []Commit
 	queryCommits(tokens, owner, repo, &commits)
 	printCommits(commits)
-
+	spinner.Stop()
 }
 
 func printCommits(commits []Commit) {
