@@ -5,7 +5,6 @@ go 1.20
 require (
 	github.com/briandowns/spinner v1.23.0
 	github.com/fatih/color v1.15.0
-	github.com/joho/godotenv v1.5.1
 )
 
 require (

@@ -4,14 +4,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"os"
 	"time"
 
 	"github.com/briandowns/spinner"
 	"github.com/fatih/color"
-	"github.com/joho/godotenv"
 )
 
 type Commit struct {
@@ -24,24 +22,18 @@ type Commit struct {
 	} `json:"commit"`
 }
 
-func init() {
-	if err := godotenv.Load(); err != nil {
-		log.Fatal(".env file couldn't to be loaded")
-	}
-}
-
 func main() {
-	tokens := os.Getenv("GITHUB_TOKENS")
+	tokens := "{github personal access tokens}"
+
 	spinner := spinner.New(spinner.CharSets[11], 100*time.Millisecond)
 	spinner.Suffix = " fetching..."
 	spinner.Start()
 
 	// github account owner
-	owner := "tnp2004" // default owner
+	owner := "{default github owner}"
 	// The repository that you want to watch commits
-	repo := "github-report-cli" // default repo
+	repo := "{default github repo}"
 
-	// can give args as => go run main.go <owner> <repo>
 	argLen := len(os.Args[1:])
 	if argLen == 1 {
 		color.HiRed("owner, repo are needed!!")
@@ -68,7 +60,7 @@ func printCommits(commits []Commit) {
 		commitTimeInTimeZone := commitTimeUTC.In(timezone)
 		commitDate := commitTimeInTimeZone.Format("2006-01-02")
 		commitTimeFormatted := commitTimeInTimeZone.Format("Monday, 2 January, 2006 15:4:5 PM")
-		text := fmt.Sprintf("\n🪅%s 🕒%s \n=> %v \n", commits[i].CommitInfo.Committer.Name, commitTimeFormatted, commits[i].CommitInfo.Message)
+		text := fmt.Sprintf("\n🪅%s 🕒%s \n📌COMMIT %v \n", commits[i].CommitInfo.Committer.Name, commitTimeFormatted, commits[i].CommitInfo.Message)
 
 		today := time.Now().Format("2006-01-02")
 		if commitDate == today {
