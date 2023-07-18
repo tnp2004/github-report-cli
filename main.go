@@ -55,7 +55,8 @@ func main() {
 }
 
 func printCommits(commits []Commit, owner, repo string) {
-	fmt.Printf("\n\n*** %s: %s ***\n", owner, repo)
+	w := fmt.Sprintf("\n\n/| %s : %s |\\", owner, repo)
+	color.Cyan(w)
 	for i := len(commits) - 1; i >= 0; i-- {
 		commitTimeUTC, _ := time.Parse(time.RFC3339, commits[i].CommitInfo.Committer.Date)
 		// chage to your time zone
@@ -73,6 +74,7 @@ func printCommits(commits []Commit, owner, repo string) {
 			fmt.Print(text)
 		}
 	}
+	fmt.Println("")
 }
 
 func queryCommits(tokens, owner, repo string, commits *[]Commit) {
